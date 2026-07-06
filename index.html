@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoboRule - Rule-Based AI Chatbot Simulator</title>
+    <!-- Google Fonts: Outfit & Space Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-container">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div>
+                    <h1>RoboRule</h1>
+                    <p class="tagline">Interactive Rule-Based AI Chatbot Dashboard</p>
+                </div>
+            </div>
+            <div class="status-indicator">
+                <span class="pulse-dot"></span>
+                <span>Active Simulator</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-grid">
+        <!-- LEFT COLUMN: Chat Interface and CLI Simulation -->
+        <section class="left-panel">
+            <!-- 1. Interactive Chat Simulator -->
+            <div class="card chat-card">
+                <div class="card-header">
+                    <div class="user-info">
+                        <div class="avatar">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+                        <div>
+                            <h2>RoboRule Bot</h2>
+                            <p class="status-text">Ready to chat • Rule Engine v1.0</p>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button id="clear-chat-btn" title="Clear chat history">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="chat-history" id="chat-history">
+                    <div class="message system-message">
+                        <p>Welcome! Type a message below to start chatting. Observe the <strong>Decision Flow</strong> on the right to see how your message is processed in real time!</p>
+                    </div>
+                    <div class="message bot-message">
+                        <div class="message-content">
+                            Hello there! I am a simple rule-based AI chatbot. How can I help you today? 🤖
+                        </div>
+                        <div class="message-time">16:27</div>
+                    </div>
+                </div>
+
+                <div class="chat-input-area">
+                    <form id="chat-form">
+                        <input type="text" id="chat-input" placeholder="Type a message (e.g. 'hello', 'who are you', 'help')..." autocomplete="off" required>
+                        <button type="submit" id="send-btn">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 2. Terminal Emulator -->
+            <div class="card terminal-card">
+                <div class="card-header">
+                    <div class="terminal-title">
+                        <i class="fa-solid fa-terminal"></i>
+                        <span>python3 chatbot.py</span>
+                    </div>
+                    <div class="terminal-controls">
+                        <span class="control-dot red"></span>
+                        <span class="control-dot yellow"></span>
+                        <span class="control-dot green"></span>
+                    </div>
+                </div>
+                <div class="terminal-body" id="terminal-body">
+                    <div class="terminal-line"><span class="prompt">$</span> python chatbot.py</div>
+                    <div class="terminal-line text-yellow">============================================================</div>
+                    <div class="terminal-line text-yellow">🤖 Welcome to the Rule-Based AI Chatbot (RoboRule) 🤖</div>
+                    <div class="terminal-line text-yellow">Type 'help' to see my commands, or 'exit'/'bye' to leave.</div>
+                    <div class="terminal-line text-yellow">============================================================</div>
+                    <div class="terminal-line"><span class="prompt">You:</span> hello</div>
+                    <div class="terminal-line"><span class="prompt">Bot:</span> Hello there! I am a simple rule-based AI chatbot. How can I help you today? 🤖</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RIGHT COLUMN: Decision Tree and Code Viewer -->
+        <section class="right-panel">
+            <!-- 3. Decision Logic Flow Visualizer -->
+            <div class="card flow-card">
+                <div class="card-header">
+                    <h2><i class="fa-solid fa-sitemap"></i> Decision Flow Visualizer</h2>
+                    <span class="badge">Live Execution Path</span>
+                </div>
+                <div class="flow-container">
+                    <div class="flow-tree" id="flow-tree">
+                        <!-- Node 1: Input -->
+                        <div class="flow-node node-start" id="node-start">
+                            <div class="node-icon"><i class="fa-solid fa-keyboard"></i></div>
+                            <div class="node-content">
+                                <div class="node-title">Raw Input</div>
+                                <div class="node-value" id="val-raw">"-"</div>
+                            </div>
+                        </div>
+
+                        <div class="flow-arrow"><i class="fa-solid fa-arrow-down"></i></div>
+
+                        <!-- Node 2: Normalize -->
+                        <div class="flow-node node-process" id="node-normalize">
+                            <div class="node-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                            <div class="node-content">
+                                <div class="node-title">Normalization</div>
+                                <div class="node-desc">Strip & Lowercase</div>
+                                <div class="node-value text-green" id="val-normalized">"-"</div>
+                            </div>
+                        </div>
+
+                        <div class="flow-arrow"><i class="fa-solid fa-arrow-down"></i></div>
+
+                        <!-- Condition Chain Container -->
+                        <div class="decision-chain">
+                            <!-- Node 3: Exit Rule -->
+                            <div class="flow-node node-decision" id="node-dec-exit">
+                                <div class="node-condition">if input in [exit, quit, bye...]</div>
+                                <div class="decision-branches">
+                                    <div class="branch branch-yes">Yes <i class="fa-solid fa-chevron-right"></i></div>
+                                    <div class="branch branch-no">No <i class="fa-solid fa-arrow-down"></i></div>
+                                </div>
+                            </div>
+
+                            <!-- Node 4: Greeting Rule -->
+                            <div class="flow-node node-decision" id="node-dec-greeting">
+                                <div class="node-condition">elif input in [hello, hi, hey...]</div>
+                                <div class="decision-branches">
+                                    <div class="branch branch-yes">Yes <i class="fa-solid fa-chevron-right"></i></div>
+                                    <div class="branch branch-no">No <i class="fa-solid fa-arrow-down"></i></div>
+                                </div>
+                            </div>
+
+                            <!-- Node 5: Identity Rule -->
+                            <div class="flow-node node-decision" id="node-dec-identity">
+                                <div class="node-condition">elif "your name" or "who are you"</div>
+                                <div class="decision-branches">
+                                    <div class="branch branch-yes">Yes <i class="fa-solid fa-chevron-right"></i></div>
+                                    <div class="branch branch-no">No <i class="fa-solid fa-arrow-down"></i></div>
+                                </div>
+                            </div>
+
+                            <!-- Node 6: State Rule -->
+                            <div class="flow-node node-decision" id="node-dec-state">
+                                <div class="node-condition">elif "how are you" or "how is it going"</div>
+                                <div class="decision-branches">
+                                    <div class="branch branch-yes">Yes <i class="fa-solid fa-chevron-right"></i></div>
+                                    <div class="branch branch-no">No <i class="fa-solid fa-arrow-down"></i></div>
+                                </div>
+                            </div>
+
+                            <!-- Node 7: Help Rule -->
+                            <div class="flow-node node-decision" id="node-dec-help">
+                                <div class="node-condition">elif input in [help, what can you do...]</div>
+                                <div class="decision-branches">
+                                    <div class="branch branch-yes">Yes <i class="fa-solid fa-chevron-right"></i></div>
+                                    <div class="branch branch-no">No <i class="fa-solid fa-arrow-down"></i></div>
+                                </div>
+                            </div>
+
+                            <!-- Node 8: Custom Rules (Dynamic) -->
+                            <div class="flow-node node-decision" id="node-dec-custom" style="display: none;">
+                                <div class="node-condition" id="custom-condition-text">elif matches custom rules...</div>
+                                <div class="decision-branches">
+                                    <div class="branch branch-yes">Yes <i class="fa-solid fa-chevron-right"></i></div>
+                                    <div class="branch branch-no">No <i class="fa-solid fa-arrow-down"></i></div>
+                                </div>
+                            </div>
+
+                            <!-- Node 9: Fallback (else) -->
+                            <div class="flow-node node-fallback" id="node-fallback">
+                                <div class="node-condition text-red">else (No rules matched)</div>
+                            </div>
+                        </div>
+
+                        <!-- Side Results container for matching nodes -->
+                        <div class="match-indicator" id="match-indicator">
+                            <div class="match-text">Match Found:</div>
+                            <div class="match-value" id="match-node-val">None</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Dynamic Code View & Custom Rules Manager -->
+            <div class="card control-card">
+                <div class="tabs-header">
+                    <button class="tab-btn active" data-tab="rules-tab"><i class="fa-solid fa-sliders"></i> Rule Manager</button>
+                    <button class="tab-btn" data-tab="code-tab"><i class="fa-solid fa-code"></i> Python Code Viewer</button>
+                </div>
+                
+                <div class="tab-content" id="rules-tab">
+                    <div class="rules-manager">
+                        <div class="add-rule-form">
+                            <h3>Add Custom If-Elif Condition</h3>
+                            <div class="input-group">
+                                <label for="rule-keywords">Keywords (comma-separated)</label>
+                                <input type="text" id="rule-keywords" placeholder="e.g. weather, temperature, rain">
+                            </div>
+                            <div class="input-group">
+                                <label for="rule-response">Bot Response</label>
+                                <textarea id="rule-response" placeholder="e.g. I cannot check the weather since I don't have internet access! 🌦️" rows="2"></textarea>
+                            </div>
+                            <button type="button" class="btn-primary" id="add-rule-btn">
+                                <i class="fa-solid fa-plus"></i> Add Rule
+                            </button>
+                        </div>
+
+                        <div class="rules-list-container">
+                            <h3>Active System Rules</h3>
+                            <div class="rules-list" id="rules-list">
+                                <!-- Rules will be rendered here dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" id="code-tab">
+                    <div class="code-viewer-header">
+                        <span>chatbot.py (Dynamic)</span>
+                        <button id="copy-code-btn" class="btn-icon" title="Copy code">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                    <pre class="code-block"><code id="python-code-content"># Loading python code...</code></pre>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <p>&copy; 2026 RoboRule. Build Project 1 successfully. Works inside browsers and python CLI.</p>
+    </footer>
+
+    <!-- App Logic Script -->
+    <script src="app.js"></script>
+</body>
+</html>
