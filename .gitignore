@@ -1,0 +1,12 @@
+# Standalone projects ignore
+Data-classification-project/
+Data-classification-project-/
+
+# Python caches and logs
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+.idea/
+.vscode/
